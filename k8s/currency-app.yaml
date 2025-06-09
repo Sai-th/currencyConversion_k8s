@@ -16,6 +16,7 @@ spec:
       containers:
       - name: currency-converter
         image: currency-converter:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 5050
         resources:

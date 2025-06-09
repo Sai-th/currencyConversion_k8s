@@ -1,4 +1,4 @@
-# creating the Jenkins master (same as docker container but in k8s)
+# This is to create the Jenkins master (same as docker container but in k8s)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,7 +27,7 @@ spec:
             memory: "1Gi"
             cpu: "500m"
 ---
-# This is to make Jenkins accessible from outside
+# This makes Jenkins accessible from outside
 apiVersion: v1
 kind: Service
 metadata:
@@ -35,10 +35,12 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 8080
+  - name: web
+    port: 8080
     targetPort: 8080
     nodePort: 30080
-  - port: 50000
+  - name: agent
+    port: 50000
     targetPort: 50000  
     nodePort: 30000
   selector:
