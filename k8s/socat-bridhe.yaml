@@ -1,0 +1,47 @@
+# This is the same socat container I used before in currency conversion docker deployment, adjested to work with k8s
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socat-bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: socat-bridge
+  template:
+    metadata:
+      labels:
+        app: socat-bridge
+    spec:
+      containers:
+      - name: socat
+        image: alpine/socat:latest
+        command: ["socat"]
+        args: ["TCP-LISTEN:2375,fork,reuseaddr", "UNIX:/var/run/docker.sock"]
+        ports:
+        - containerPort: 2375
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: socat-service
+spec:
+  ports:
+  - port: 2375
+    targetPort: 2375
+  selector:
+    app: socat-bridge

@@ -1,0 +1,40 @@
+# This is to deploy my currency converter app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: currency-converter
+spec:
+  replicas: 1  # Starting with just 1, can increase later
+  selector:
+    matchLabels:
+      app: currency-converter
+  template:
+    metadata:
+      labels:
+        app: currency-converter
+    spec:
+      containers:
+      - name: currency-converter
+        image: currency-converter:latest
+        ports:
+        - containerPort: 5050
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: currency-service
+spec:
+  type: NodePort
+  ports:
+  - port: 5050
+    targetPort: 5050
+    nodePort: 30050
+  selector:
+    app: currency-converter
