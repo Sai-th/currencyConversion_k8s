@@ -7,6 +7,12 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     && rm -rf /var/lib/apt/lists/*
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+    && chmod +x kubectl \
+    && mv kubectl /usr/local/bin/
+# Create python symlink
 RUN ln -s /usr/bin/python3 /usr/bin/python
+# Add jenkins user to docker group
 RUN usermod -a -G docker jenkins
 USER jenkins
