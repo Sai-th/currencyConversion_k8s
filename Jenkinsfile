@@ -1,4 +1,3 @@
-cat > Jenkinsfile << 'EOF'
 pipeline {
     agent {
         label 'jenkins-agent-python'
@@ -28,8 +27,3 @@ pipeline {
         }
     }
 }
-<<<<<<< HEAD
-EOF
-=======
-EOF
->>>>>>> 1bc41a2529074eb7d36f6ca4951a98ff664c22f5
